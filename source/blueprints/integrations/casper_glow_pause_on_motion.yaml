@@ -1,0 +1,30 @@
+blueprint:
+  name: "Pause Casper Glow on motion"
+  description: "Pauses the Casper Glow dimming sequence when motion is detected in the room."
+  domain: automation
+  input:
+    motion_sensor:
+      name: Motion sensor
+      selector:
+        entity:
+          domain: binary_sensor
+          device_class: motion
+    glow_light:
+      name: Casper Glow light
+      selector:
+        entity:
+          filter:
+            integration: casper_glow
+            domain: light
+triggers:
+  - trigger: state
+    entity_id: !input motion_sensor
+    to: "on"
+conditions:
+  - condition: state
+    entity_id: !input glow_light
+    state: "on"
+actions:
+  - action: casper_glow.pause
+    target:
+      entity_id: !input glow_light
